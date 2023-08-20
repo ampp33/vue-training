@@ -1,0 +1,22 @@
+<html>
+    <head>
+        <script>
+            function addGoal() {
+                const text = document.getElementById('newGoalText').value
+                const p = document.createElement('p')
+                p.style.borderStyle = "groove"
+                p.style.padding = "8px"
+                p.textContent = text
+                document.getElementById('goals').appendChild(p)
+            }
+        </script>
+    </head>
+    <body>
+        <div style="width: 400px">
+            <h2>Goal</h2>
+            <input id="newGoalText" type="text" style="width: 100%" />
+            <button id="addGoal" onclick="addGoal()">Add Goal</button>
+            <div id="goals"></div>
+        </div>
+    </body>
+</html>
