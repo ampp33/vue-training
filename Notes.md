@@ -121,3 +121,33 @@ export default {
 ## Basic Vue Features
 `v-model` - *two way bind* attribute to bind to a variable in the `data()` section
 `v-on:click` , shorthanded to `@click` - attribute to tell what the element to execute on click
+
+# Basics & Core Concepts - DOM Interaction
+
+Basic setup of a Vue app on a page using basic JS:
+
+```js
+const app = Vue.createApp({
+	data() {
+		return {}
+	}
+})
+app.mount('#app')
+```
+
+Vue scans HTML behind the scenes and updates the page accordingly.
+
+`{{ abc }}` - *interpolation* in Vue, which you can use to output values on the page (only works between HTML tags).  Can use JS code within these braces, but can't write complex code (like if statements), but we can write any JS expression here like ternary expressions.
+
+`v-bind:href` or `:href` - *binding* to have data from the `data` object be injected into element attributes (this is a *Vue directive*) (bind here means to 'set a value').  *The values you can put here have the same rules as interpolation above.*
+
+Methods in Vue apps:
+```js
+data() {
+	return {}
+},
+methods: {
+	dotStuff() {}
+}
+```
+
