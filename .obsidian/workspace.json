@@ -1,14 +1,14 @@
 {
   "main": {
-    "id": "de8cab4a4f24e187",
+    "id": "d1eea38ab896bef1",
     "type": "split",
     "children": [
       {
-        "id": "0e685196423c57fb",
+        "id": "0f286575c8b7b5fa",
         "type": "tabs",
         "children": [
           {
-            "id": "b0b6f1236e6a651e",
+            "id": "8229dbd4045839b1",
             "type": "leaf",
             "state": {
               "type": "markdown",
@@ -25,15 +25,15 @@
     "direction": "vertical"
   },
   "left": {
-    "id": "089a9843b42ca6d2",
+    "id": "8a102d73409d1f30",
     "type": "split",
     "children": [
       {
-        "id": "8d62d369540f5c2a",
+        "id": "d5d86073b90230d9",
         "type": "tabs",
         "children": [
           {
-            "id": "0e4c35e3ac410359",
+            "id": "2270a7414d7e33c5",
             "type": "leaf",
             "state": {
               "type": "file-explorer",
@@ -43,7 +43,7 @@
             }
           },
           {
-            "id": "3bc7efff92b3c16e",
+            "id": "4f6e827243e31cf4",
             "type": "leaf",
             "state": {
               "type": "search",
@@ -58,7 +58,7 @@
             }
           },
           {
-            "id": "053c80f40cb298ff",
+            "id": "af45f1b3834caaaa",
             "type": "leaf",
             "state": {
               "type": "bookmarks",
@@ -73,15 +73,15 @@
     "collapsed": true
   },
   "right": {
-    "id": "e392341b3b589880",
+    "id": "6a42317d2b7b0bfc",
     "type": "split",
     "children": [
       {
-        "id": "74026adc4a67cffa",
+        "id": "3f7adfa4067a70cd",
         "type": "tabs",
         "children": [
           {
-            "id": "947dbb5490005e4c",
+            "id": "b5c77fc2ec62b933",
             "type": "leaf",
             "state": {
               "type": "backlink",
@@ -98,7 +98,7 @@
             }
           },
           {
-            "id": "db660f6faba9e8b2",
+            "id": "6d276e566aaf9fb1",
             "type": "leaf",
             "state": {
               "type": "outgoing-link",
@@ -110,7 +110,7 @@
             }
           },
           {
-            "id": "a378e1f37d33da15",
+            "id": "1b805e7d21a060d8",
             "type": "leaf",
             "state": {
               "type": "tag",
@@ -121,7 +121,7 @@
             }
           },
           {
-            "id": "24332c83339be14e",
+            "id": "84a3ac2bd2c84e91",
             "type": "leaf",
             "state": {
               "type": "outline",
@@ -147,44 +147,46 @@
       "command-palette:Open command palette": false
     }
   },
-  "active": "b0b6f1236e6a651e",
+  "active": "8229dbd4045839b1",
   "lastOpenFiles": [
-    "exercises/1-7/vue-project/node_modules/@esbuild/win32-x64/esbuild.exe",
-    "exercises/1-7/vue-project/node_modules/@babel/parser/typings/babel-parser.d.ts",
-    "exercises/1-7/vue-project/node_modules/@babel/parser/typings",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist/esm/package.json",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist/umd/estree-walker.js",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist/esm/estree-walker.js",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist/umd",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist/esm",
-    "exercises/1-7/vue-project/node_modules/estree-walker/dist",
-    "exercises/1-7/vue-project/node_modules/vite/bin/openChrome.applescript",
-    "exercises/1-7/vue-project/node_modules/vite/bin/vite.js",
-    "exercises/1-7/vue-project/node_modules/vue/README.md",
-    "exercises/1-7/vue-project/node_modules/vite/LICENSE.md",
-    "exercises/1-7/vue-project/node_modules/@vue/compiler-sfc/README.md",
-    "exercises/1-7/vue-project/node_modules/nanoid/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/compiler-core/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/shared/README.md",
-    "exercises/1-7/vue-project/node_modules/@jridgewell/sourcemap-codec/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/reactivity-transform/README.md",
-    "exercises/1-7/vue-project/node_modules/@babel/parser/CHANGELOG.md",
-    "exercises/1-7/vue-project/node_modules/picocolors/README.md",
-    "exercises/1-7/vue-project/node_modules/magic-string/README.md",
-    "exercises/1-7/vue-project/node_modules/csstype/README.md",
-    "exercises/1-7/vue-project/README.md",
-    "exercises/1-7/vue-project/src/assets/logo.svg",
-    "exercises/1-7/vue-project/node_modules/vite/README.md",
-    "exercises/1-7/vue-project/node_modules/@vitejs/plugin-vue/README.md",
-    "exercises/1-7/vue-project/node_modules/postcss/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/server-renderer/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/compiler-ssr/README.md",
-    "exercises/1-7/vue-project/node_modules/@vue/compiler-dom/README.md",
-    "exercises/1-7/vue-project/node_modules/source-map-js/README.md",
-    "exercises/1-7/vue-project/node_modules/source-map-js/CHANGELOG.md",
-    "exercises/1-7/vue-project/node_modules/rollup/README.md",
-    "exercises/1-7/vue-project/node_modules/rollup/LICENSE.md",
-    "exercises/1-7/vue-project/node_modules/estree-walker/README.md",
-    "exercises/1-7/vue-project/node_modules/estree-walker/CHANGELOG.md"
+    "exercises/4-51/vue-project/node_modules/@esbuild/darwin-x64/README.md",
+    "exercises/4-51/vue-project/node_modules/@esbuild/darwin-x64/package.json",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/package.json",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/typings/babel-parser.d.ts",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/typings",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/whitespace.js.map",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/scopeflags.js.map",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/scopeflags.js",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/whitespace.js",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/scope.js.map",
+    "exercises/4-51/vue-project/node_modules/@babel/parser/lib/util/scope.js",
+    "exercises/4-51/vue-project/node_modules/vite/LICENSE.md",
+    "exercises/4-51/vue-project/node_modules/vite/README.md",
+    "exercises/4-51/vue-project/node_modules/rollup/LICENSE.md",
+    "exercises/4-51/vue-project/node_modules/rollup/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/compiler-sfc/README.md",
+    "exercises/4-51/vue-project/node_modules/vue/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/runtime-dom/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/runtime-core/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/compiler-dom/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/compiler-core/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/server-renderer/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/reactivity/README.md",
+    "exercises/4-51/vue-project/node_modules/@vitejs/plugin-vue/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/shared/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/reactivity-transform/README.md",
+    "exercises/4-51/vue-project/node_modules/@vue/compiler-ssr/README.md",
+    "exercises/4-51/vue-project/node_modules/magic-string/README.md",
+    "exercises/4-51/vue-project/node_modules/postcss/README.md",
+    "exercises/4-51/vue-project/node_modules/esbuild/README.md",
+    "exercises/4-51/vue-project/node_modules/esbuild/LICENSE.md",
+    "exercises/4-51/vue-project/node_modules/source-map-js/README.md",
+    "exercises/4-51/vue-project/node_modules/source-map-js/CHANGELOG.md",
+    "exercises/4-51/vue-project/node_modules/nanoid/README.md",
+    "exercises/4-51/vue-project/node_modules/csstype/README.md",
+    "exercises/4-51/vue-project/node_modules/estree-walker/README.md",
+    "exercises/4-51/vue-project/src/assets/logo.svg",
+    "exercises/1-7 copy/vue-project/src/assets/logo.svg",
+    "exercises/1-7/vue-project/src/assets/logo.svg"
   ]
 }

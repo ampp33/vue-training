@@ -137,17 +137,119 @@ app.mount('#app')
 
 Vue scans HTML behind the scenes and updates the page accordingly.
 
+*Vue has two way data binding*
+
+*Do not call methods to display page data*, since behind the scenes on ANY page update it'll call the method again, since Vue doesn't know what the method does (and if it binds to data that's potentially being updated via the executed action).  *The same goes for methods that are bound in attributes!* This is not great for performance.  The solution is to use `computed` properties.
+
 `{{ abc }}` - *interpolation* in Vue, which you can use to output values on the page (only works between HTML tags).  Can use JS code within these braces, but can't write complex code (like if statements), but we can write any JS expression here like ternary expressions.
 
 `v-bind:href` or `:href` - *binding* to have data from the `data` object be injected into element attributes (this is a *Vue directive*) (bind here means to 'set a value').  *The values you can put here have the same rules as interpolation above.*
 
+`v-html` - attribute you can add to an element to have it render HTML
+
 Methods in Vue apps:
 ```js
 data() {
-	return {}
+	return {
+		name: 'bob'
+	}
 },
 methods: {
-	dotStuff() {}
+	doStuff() {
+		// the `this` keyword here refers to the global Vue object which has had it's `data` merged into it
+		console.log(this.name)
+	}
 }
 ```
 
+`v-on:click` or `@click` - lets us bind event listeners on elements to methods (ex: `@click='doStuff'`).  All default events in HTML are what you can listen for!  Could use Javascript inside the `@click` section as well.
+- *want to avoid putting code into HTML code, usually HTML code should only be in charge of displaying stuff*
+
+Can call methods in Vue within `v-on:click` , but using either `method` or `method()`, Vue will detect what you're doing and handle it accordingly.  Nice!  Usually you'll just point at the method tho.
+
+`Native Event Object` - object passed to your handler method when you call it via `@click` or any event binding.  An `event` object will automatically be provided as the first arg to the event listener method you specified.  If you called the method with parenthesis tho then it won't send the event object.  If you want to call your method AND want the event value then you need to call your method like this: `doStuff($event, index, param, here)`
+
+`Event Modifiers` - Bits you can add onto directive attributes (ex: `@click`) to change how they behave.  There are built in modifiers, and you can specify them after the event name with a `.` (dot).  Ex: `@submit.prevent="submitFormHandler"` , which would prevent the default action (like submitting the page form).  Can also do this with buttons:  `@click.right="doStuff"` which would only trigger when right clicking the element.
+- `.stop` stops event propagation, doesn't propagate up to the parent
+
+`Key Modifiers` - Keyboard event modifiers, similar to event modifiers, but much easier for handling specific key events! Ex: `@keyup.enter="finalizeValue"`.  This allows for the usage of any keyboard key!
+
+`v-once` - Preserves the initial state of the element, even if it uses Vue bindings, and tells the element that dynamic data bindings will only be evaluated once, and never again.  Nice for initial values if you want to keep them.  Kinda niche, according to the presenter.
+
+`v-model` - two way binding to bind data on an element
+
+`computed` properties - same idea as methods that output data, except that Vue will be aware of their data dependencies, and will only execute them whenever those dependencies have changed.  Name these the same way you'd name your data properties.
+
+`watch` (watchers) - Functions that'll be called when one of its dependencies changed, though you name them after `data` properties, to detect when those values change.  Methods don't return anything, because we don't actually use them in the HTML.  Gets the latest value and previous value of the watched property as arguments to the method: `name(currentName, previousName)`.  `computed` properties behave similarly, but are much more useful when you need to output values based on multiple fields (since watchers can only watch single attributes).
+
+# Dynamic Styling
+
+If you bind `style` dynamically then you need to use a special syntax: you feed in an object.
+Can either quote CSS properties or use camelcase version of property (ex: `borderColor` vs `'border-color'`).  Can also use basic JS code in these objects.
+
+```vue
+<div class="demo" :style="{'border-color': dataVariableHere}"></div>
+```
+
+Binding Classes Dynamically
+
+```vue
+<div class="demo" :class="variableThatReturnsClassNamesHere"></div>
+```
+
+```vue
+<div class="demo" class="static classes here" :class="{ 'cssClassNameHere': boolean }"></div>
+```
+
+```vue
+<div class="demo" :class="['static', 'classes', 'here', { 'cssClassNameHere': boolean }]"></div>
+```
+
+Can also use computed properties with styles.
+
+# Conditional Rendering
+`v-if`, `v-else`, `v-else-if` - statement in JS, and if it evaluates to true then the element (and all child elements) is rendered.  (the `else` statements must be used in direct neighbors of ones with `v-if`).  *When something isn't rendered, the element isn't even on the page (vs. setting `display: none`)*.
+- can be expensive to re-create elements each time they're added to the DOM
+
+`v-show` - Hides/shows elements via `display: none`
+- can result in lots of DOM elements you don't need
+
+*General rule of thumb*: use `v-if`, only only fall back to `v-show` for elements that get toggled a lot
+
+`v-for` - loops!  To be efficient this re-uses DOM elements, which is pretty cool (but can cause weird bugs if you don't use `:key`), so be sure to use the `:key` attribute!
+
+```vue
+<div v-for="item in list" :key="item">
+	<!-- this will be repeated for each item in the list -->
+</div>
+```
+
+```vue
+<div v-for="(item, index) in list" :key="item">
+	<!-- this will be repeated for each item in the list -->
+</div>
+```
+
+Loop through objects:
+
+```js
+const guy = {
+	name: 'kevin',
+	age: 35
+}
+```
+
+```vue
+<!-- can just use value, but CAN add keyName and index -->
+<div v-for="(value, keyName, index) in guy" :key="keyName">
+	<!-- this will be repeated for each attribute in the object -->
+</div>
+```
+
+Loop through a range of numbers
+
+```vue
+<div v-for="num in 10" :key="num">
+	<!-- numbers! -->
+</div>
+```
