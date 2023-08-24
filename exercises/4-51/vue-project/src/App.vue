@@ -35,6 +35,7 @@
 
 <script>
 export default {
+  derp: {},
   data() {
     return {
       monsterHealth: 100,

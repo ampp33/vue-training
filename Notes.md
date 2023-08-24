@@ -27,6 +27,15 @@ npm install
 npm run dev
 ```
 
+OR
+
+```bash
+npm vue init
+cd vue-project
+npm install
+npm run dev
+```
+
 Server will run on: http://localhost:5173/
 
 ## Basic Vue Definition
@@ -340,7 +349,33 @@ app.component('hello-world', {
 	},
 	methods: {}
 })
+
+// or if you're using the Vue CLI
+
+import HelloWorld from './HelloWorld.vue'
+
+const app = createApp(App)
+
+app.component('hello-world', HelloWorld)
+
+app.mount('#app')
+
 ```
 
 *A Vue component is essentially just another Vue app, that belongs to another app.*
+# Better Development with Vue CLI
+- Why do we need this setup?
+	- Will let us build bigger apps at scale
+- Why do we need a dev server?
+	- Currently we're using the `file://` protocol, rather than `http://`, which affects how the page works and which JS features are available
+	- Better represents what the users will be using (hosted by a server, not a file)
 
+Vue CLI
+- uses Build Workflow - has a build process to generate the final files that'll be used to serve the app, the files we're working with aren't what'll actually be served to the users
+
+`*.vue` - single file component
+
+*Naming your main Vue app file `Vue.app` is a convention*
+
+Named export: `import { thing } from './App.vue'`
+Default export: `import App from './App.vue'`
