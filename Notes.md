@@ -327,9 +327,20 @@ methods: {
 
 
 # Components
-Good for splitting and segregating chunks of your app up
+Good for splitting and segregating chunks of your app up, and splitting up bits of functionality into their own containers.
 
 ```js
 // tells Vue we want to create a new component
-app.component('hello-world')
+// NOTE: should usually should use an element name with a dash, to avoid clashing with existing HTML elements
+app.component('hello-world', {
+	// need this, since we need HTML
+	template: ``
+	data() {
+		return {}
+	},
+	methods: {}
+})
 ```
+
+*A Vue component is essentially just another Vue app, that belongs to another app.*
+
