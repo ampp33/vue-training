@@ -253,3 +253,83 @@ Loop through a range of numbers
 	<!-- numbers! -->
 </div>
 ```
+
+# Vue Behind the Scenes
+Your `data` variables are merged into a global object which is passed to your methods, *but also* that merge process also converts those variables into JS `proxy` objects
+
+`Proxy` - notifies subscribers when new values are assigned to the underlying value
+
+Proxy Example:
+
+```js
+const data = {
+	message: 'hello'
+}
+
+const handler = {
+	set(target, key, value) {
+		console.log(target, key, value)
+		// { message: 'hello'} object we just wrapped in a Proxy
+		// message
+		// hey again
+	}
+}
+
+const proxy = new Proxy(data, handler)
+
+proxy.message = 'hey again'
+```
+
+`Template` - "Controlled HTML", the HTML that Vue attaches to, is called the `template` of the Vue app
+
+Multiple apps:
+```js
+const app1 = Vue.createApp({})
+app1.mount('#app1')
+
+const app2 = Vue.createApp({})
+app1.mount('#app2')
+```
+
+`refs` - way to get at specific DOM objects, if needed
+```vue
+<input type="text" ref="coolId">
+
+methods: {
+	doCoolThings() {
+		const inputValue = this.$refs.coolId.value
+	}
+}
+```
+
+## How Vue updates the Dom
+- Uses the Virtual DOM
+	- Vue directives are kept track of behind the scenes, aren't actually part of the DOM
+	- Vue only re-renders elements that changed, not the whole DOM
+- How are DOM updates detected?
+	- Doesn't compare DOMs, since this is too performance intensive
+	- *Uses the Virtual DOM* (JS-based DOM that exists in memory) (ex: `{el: 'h2', child: 'Hello!' }, ...`), and compares the new virtual DOM (after a change) to the current virtual DOM and applies those changes
+		- Has lots of other optimizations, doesn't work EXACTLY like this, but it's pretty performant!
+
+## Vue Lifecycle
+1. **createApp**({})
+2. **beforeCreate**() (before app has been fully init)
+3. **created**() (app is fully init)
+4. *Compile Template* (dynamic placeholders and interpolation are replaced)
+5. **beforeMount**() (nothing on the screen)
+6. **mounted**() (see something on the screen) (have a Mounted Vue Instance)
+7. *Data Changed*
+8. **beforeUpdate**()
+9. **updated**()
+10. Instance Unmounted (app is removed from the screen and is dead)
+11. **beforeUnmounted**() (this and above method are good for cleanup work)
+12. **umounted**()
+
+
+# Components
+Good for splitting and segregating chunks of your app up
+
+```js
+// tells Vue we want to create a new component
+app.component('hello-world')
+```
