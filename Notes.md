@@ -191,7 +191,9 @@ Can call methods in Vue within `v-on:click` , but using either `method` or `meth
 
 `watch` (watchers) - Functions that'll be called when one of its dependencies changed, though you name them after `data` properties, to detect when those values change.  Methods don't return anything, because we don't actually use them in the HTML.  Gets the latest value and previous value of the watched property as arguments to the method: `name(currentName, previousName)`.  `computed` properties behave similarly, but are much more useful when you need to output values based on multiple fields (since watchers can only watch single attributes).
 
-# Dynamic Styling
+# Styling
+
+## Dynamic Styling
 
 If you bind `style` dynamically then you need to use a special syntax: you feed in an object.
 Can either quote CSS properties or use camelcase version of property (ex: `borderColor` vs `'border-color'`).  Can also use basic JS code in these objects.
@@ -215,6 +217,21 @@ Binding Classes Dynamically
 ```
 
 Can also use computed properties with styles.
+
+## Scoped Styling
+Way to telling Vue whether styles should be applied globally or only to the component it's defined on.
+
+Usually global styles are defined in your `App.vue` file
+
+```vue
+<style>
+/* style here affects all files, regardless of where the component is defined in the file tree *
+</style>
+
+<style scoped>
+/* style here only applies to the component file it's in *
+</style>
+```
 
 # Conditional Rendering
 `v-if`, `v-else`, `v-else-if` - statement in JS, and if it evaluates to true then the element (and all child elements) is rendered.  (the `else` statements must be used in direct neighbors of ones with `v-if`).  *When something isn't rendered, the element isn't even on the page (vs. setting `display: none`)*.
@@ -524,6 +541,131 @@ instead of...
 </template>
 ```
 
+`Inject` / `Provide` - *lets you define variables or methods in a parent element, and can inject them in a child element*, which can be handy when you need functionality for a higher level method/object to be available to a lower level component without having to pass attributes down thru the layers.
+
+```js
+// provider
+{
+	provide: {
+		asdf: this.asdf,
+		someData: { name: 'bob' }
+	},
+	methods: {
+		asdf(text) {
+			console.log(text)
+		}
+	}
+}
+
+// injector
+{
+	inject: ['asdf', 'someData']
+	methods: {
+		doStuff() {
+			this.asdf(this.someData.name) // prints 'bob'
+		}
+	}
+}
+```
+
+### Global vs. Local Component Registration
+
+*Global*
+The more components the more our app needs to load initially, which is fine for a basic app, but for a bigger app it could mean more upfront cost to load a bunch of components.  Plus, this doesn't tell us which components are used by which components.
+
+```js
+const app = createApp(App)
+app.component('cool-component', CoolComponent)
+app.component('cool-thing', CoolThing)
+```
+
+*Local*
+```vue
+<template>
+	<div>
+		<!-- both of these work -->
+		<cool-thing />
+		<CoolThing />
+	</div>
+</template>
+
+<script>
+import CoolThing from './components/CoolThing.vue'
+
+export default {
+	components: {
+		CoolThing
+	},
+	data() { return {} }
+}
+</script>
+```
+
+## Slots
+Lets you pass child HTML/Vue elements into components
+
+Child
+```vue
+<template>
+	<div>
+		<slot><!-- default slot --></slot>
+		<slot name="first"><!-- named slot --></slot>
+	</div>
+</template>
+```
+
+Parent
+```vue
+<template>
+	<child-component>
+		<!-- all this will be rendered inside the <slot> element above, but you can add a <template v-slot:default> wrapper around this if you want to be more explict -->
+		<div>
+			<h1>Hello There!</h1>
+		</div>
+		<template v-slot:first>
+			<!-- all this will be rendered inside the <slot name="first"> element above -->
+			<div>
+				<h2>More Text!</h1>
+			</div>
+		</template>
+	</child-component>
+</template>
+```
+
+*Shorthand* - you can shorten `<template v-slot:first>` to `<template #first>`
+
+*When working with slots and sending components into them, nothing changes about scoped styles and data changes, even though you're passing elements to a child element the data and styles you're passing to them still applies inside the parent object!*
+
+*Default Slot Content* - content you can specify between `<slot>` elements that will be displayed if no slot data is provided, handy if you have some fallback HTML you want displayed.
+
+`$slot` - built in Vue object that tells you about the slot data passed to your component.  Slot names are the properties of this object (ex: `this.$slot.first`, based on the example above, would return info on that slot.).  If no data is put in the slot then the `this.$slot.laskdjf` would be `undefined`.
+
+## Scoped Slots
+Useful if you have a child component that displays slot data, but you want to customize the data that it's displaying... but we don't have access to the data its displaying because that info is contained with the child component. *Lets you pass data from the component where you defined the slot, to the component that uses the slot.*
+
+Niche feature, but it's available.
+
+Note that you can shorthand `<template #default="someSlotProps">`, since the child component has only one `slot`, into this: `<child-component #default="someSlotProps">`
+
+```vue
+<!-- child element that defines the slot -->
+<template>
+	<div>
+		<slot :item="name" :stuff="thing"></slot>
+	</div>
+</template>
+
+<!-- parent element that uses the child element and its slot -->
+<template>
+	<child-component>
+		<!-- someSlotProps will always be an object that contains the data passed from the child element that had the slot -->
+		<template #default="someSlotProps">
+			<h1>{{ someSlotProps.name }}{{ someSlotProps.thing }}</h1>
+		</template>
+	</child-component>
+</template>
+```
+
 # Better Development with Vue CLI
 - Why do we need this setup?
 	- Will let us build bigger apps at scale
@@ -541,4 +683,4 @@ Vue CLI
 Named export: `import { thing } from './App.vue'`
 Default export: `import App from './App.vue'`
 
-102
+117
