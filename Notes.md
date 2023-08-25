@@ -365,7 +365,8 @@ app.mount('#app')
 *A Vue component is essentially just another Vue app, that belongs to another app.*
 
 ## Props
-`props` - custom HTML attributes on a custom component/element, that allows us to pass *one-way* data to the child component
+`props` - custom HTML attributes on a custom component/element, that allows us to pass *one-way* data to the child component.
+
 ```js
 {
 	name: 'friend-contact'
@@ -373,6 +374,9 @@ app.mount('#app')
 	props: [ 'name', 'email', 'phoneNumber' ],
 	data() {
 		return {}
+	},
+	methods: {
+		doStuff() { console.log(this.name) }
 	}
 }
 ```
@@ -381,6 +385,145 @@ app.mount('#app')
 <!-- NOTE: you SHOULD use kebab case here for the attributes! -->
 <friend-contact name="bob" email="bob@bob.com" phone-number="1232342345" />
 ```
+
+*Props should not be mutated (will cause an error).*  We shouldn't do this because this is a uni-directional data flow, so we don't want to give the impression the parent data will change.  *How would we change the parent, if we wanted to?*
+1. Let the parent know
+2. Take received data as the initial data, but put the value into a new data property to ack that we aren't trying to change the passed in data
+```js
+{
+	props: [ 'name' ],
+	data() {
+		return {
+			actualName: this.name
+		}
+	}
+}
+```
+
+### Prop Validation
+*This doesn't cause an error on the screen, but will provide a warning in the console*!  Nice.
+
+```json
+{
+	props: {
+		name: String,
+		phoneNumber: String,
+		emailAddress: String
+	}
+}
+
+// or
+
+{
+	props: {
+		name: {
+			type: String,
+			required: true,
+			default: 'bob', // could also be a function
+			validator() { return true } // return boolean
+		},
+		phoneNumber: String,
+		emailAddress: String
+	}
+}
+```
+
+Supported types:
+- String
+- Number
+- Boolean
+- Array
+- Object
+- Date  
+- Function
+- Symbol
+- (any constructor function, like Date or any custom constructor)
+
+### Dynamic Props
+Can bind prop attributes on elements
+
+*Need to specify a key on custom components* when using `v-for` with them
+
+### Emitting Custom Events (Parent -> Child Comm)
+How does this work for regular HTML elements?  We add an event listener and it calls us when the event is fired, it works the same for Vue components!  Here's an example:
+
+Parent
+```vue
+<template>
+	<div>
+		<child-element @value-changed="handleStuff" />
+	</div>
+</template>
+
+<script>
+default export {
+	methods: {
+		handleStuff(valueFromChild) {
+			console.log(`value-changed event data from child: ${valueFromChild}`
+		}
+	}
+}
+</script>
+```
+
+Child
+```js
+{
+	methods: {
+		valueIsChangedParentShouldKnowAbout() {
+			this.$emit('value-changed', this.someValue) // name of custom event (kebab case), ...params
+		}
+	}
+}
+```
+
+What if the value being passed from the child to the parent needs to tell the parent that the data belongs to a specific object the parent holds?  *Pass the value you want to alert about + the id, so the parent can pair the value up with the obj that had that value.  Note that if you go this route there's a good chance you can remove the intermediate variable that stored the prop from the parent.*
+
+**Props are for sending data into an element, events/emits are for sending data out of them.**
+
+### Defining and Validating Custom Events
+```js
+{
+	// define which custom events your component emits, this is your documentation!
+	emits: [ 'toggle-favorites' ]
+	// or
+	emits: {
+		'toggle-favorites': function(someValue) {
+			// can add validation here (will cause a warning in the console)
+			return id ? true : false
+		}
+	}
+}
+```
+
+`Prop Fallthrough` - Props and events added on a custom component tag **automatically fall through** to the **root component** in the template of that component.  (*ex*: if you created a component that's base element is a `<button>` your custom component exposes props `type` and handler `@click` even if you didn't add that prop or any emitters).  You can get access to these fallthrough props on a built-in `$attrs` property (e.g. `this.$attrs`).  This can be handy to build "utility" or pure presentational components where you don't want to define all props and events individually.
+
+`Binding All Props` - If you have an object with attributes where you want to bind all of those attributes to props on a component, you can use this:
+
+```vue
+<template>
+	<user-data v-bind="user" />
+</template>
+
+<script>
+export default {
+	data() {
+		return {
+			user: { name: 'kevin', age: '35' }
+		}
+	}
+}
+</script>
+```
+
+instead of...
+
+```vue
+<template>
+	<user-data :name="user.name" :age="user.age" />
+</template>
+```
+
 # Better Development with Vue CLI
 - Why do we need this setup?
 	- Will let us build bigger apps at scale
@@ -397,3 +540,5 @@ Vue CLI
 
 Named export: `import { thing } from './App.vue'`
 Default export: `import App from './App.vue'`
+
+102
