@@ -363,6 +363,24 @@ app.mount('#app')
 ```
 
 *A Vue component is essentially just another Vue app, that belongs to another app.*
+
+## Props
+`props` - custom HTML attributes on a custom component/element, that allows us to pass *one-way* data to the child component
+```js
+{
+	name: 'friend-contact'
+	// see here, and be sure to use camel case, but use kebab case on the attrs
+	props: [ 'name', 'email', 'phoneNumber' ],
+	data() {
+		return {}
+	}
+}
+```
+
+```html
+<!-- NOTE: you SHOULD use kebab case here for the attributes! -->
+<friend-contact name="bob" email="bob@bob.com" phone-number="1232342345" />
+```
 # Better Development with Vue CLI
 - Why do we need this setup?
 	- Will let us build bigger apps at scale
