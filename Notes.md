@@ -666,6 +666,37 @@ Note that you can shorthand `<template #default="someSlotProps">`, since the chi
 </template>
 ```
 
+## Dynamic Components
+Lets you dynamically specify which component should be displayed, using the `<component>` tag
+
+```vue
+<template>
+	<div>
+		<component is="user-profile" />
+	</div>
+</template>
+```
+
+`<keep-alive>` - can add these tags around a component, so that if a component within the tags is removed then the removed component will still keep its state, even though it's been removed.
+
+## Teleporting Elements
+Useful if you have an element that shouldn't be added to the DOM where it's defined, but instead to move it somewhere more appropriate (ex: move a dialog element to the root of the page, rather that nested within the component that defined the dialog)
+
+```vue
+<template>
+	<teleport to="css selector here (ex: body)">
+		<!-- element to teleport here, which you can still design and use within this component, except that it'll be rendered elsewhere -->
+	</teleport>
+</template>
+```
+
+## Fragments
+```vue
+<template>
+	<!-- in Vue 2 you needed to have a single base element, but in Vue 3 you're allowed to have multiple -->
+</template>
+```
+
 # Better Development with Vue CLI
 - Why do we need this setup?
 	- Will let us build bigger apps at scale
@@ -683,4 +714,9 @@ Vue CLI
 Named export: `import { thing } from './App.vue'`
 Default export: `import App from './App.vue'`
 
-117
+# !Style Guide
+https://v2.vuejs.org/v2/style-guide/
+
+
+
+127
