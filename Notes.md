@@ -546,9 +546,12 @@ instead of...
 ```js
 // provider
 {
-	provide: {
-		asdf: this.asdf,
-		someData: { name: 'bob' }
+	// NOTE: use function syntax here so that we have access to 'this'
+	provide() {
+		return {
+			asdf: this.asdf,
+			someData: { name: 'bob' }
+		}
 	},
 	methods: {
 		asdf(text) {
