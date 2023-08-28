@@ -719,6 +719,7 @@ Default export: `import App from './App.vue'`
 
 # !Style Guide
 https://v2.vuejs.org/v2/style-guide/
+
 # Forms
 `checkboxes`
 	- when using a single checkbox (and not a group of them), the `v-model` will utilize a boolean
@@ -735,3 +736,19 @@ https://v2.vuejs.org/v2/style-guide/
 
 ## Input Validation
 Can validate on each keystroke or when it blurs, which could be done via `@blur` and whatnot.  Vue doesn't appear to have anything cool built in for form validation, besides using events and styling to indicate errors however you want.
+
+## Custom Inputs
+You can create your own custom inputs (ex: a custom rating / star component) and you can use `v-model` with your component by doing the following:
+1. Accept the `modelValue` prop (`v-model` adds the `:model-value=""` attribute to the element under the hood)
+2. Emit the `update:modelValue` event (with the current control value as the second param)
+3. Avoid setting a `data` item to the `this.modelValue` value, since this won't cause the `data` to get updated if the model is updated from the parent.  Instead you can either rely on the `this.modelValue` value of your custom input, or maybe use a `watch`?
+
+# Backend / Sending HTTP Requests
+Going to use **Firebase** for this course, since it's a backend database that already has APIs exposed for you, which solves our problems here, and saves us from having to create our own servers!
+
+## Firebase Setup
+1. Login using Google Account
+2. Create a *database* (Realtime Database, which will give us a REST API!)
+3. Start in TEST mode
+4. *Take note of the HTTP URL it provides*, this is where we'll pull and push data to
+
