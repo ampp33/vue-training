@@ -719,7 +719,19 @@ Default export: `import App from './App.vue'`
 
 # !Style Guide
 https://v2.vuejs.org/v2/style-guide/
+# Forms
+`checkboxes`
+	- when using a single checkbox (and not a group of them), the `v-model` will utilize a boolean
+	- when using multiple checkboxes in a group you provide the same `v-model` name to all checkboxes *and* make sure to specify a `value` attribute for each of the checkboxes
+`radio buttons`
+	- same rules as `checkboxes`
+`dropdowns`
+- use `v-model`, it works as you'd expect
 
+`v-model` modifiers:
+- `lazy` - only syncs after the `change` event, rather than after each `input` event
+- `number` - if you want the data to be auto converted to a number
+- `trim` - auto trims value
 
-
-127
+## Input Validation
+Can validate on each keystroke or when it blurs, which could be done via `@blur` and whatnot.  Vue doesn't appear to have anything cool built in for form validation, besides using events and styling to indicate errors however you want.
