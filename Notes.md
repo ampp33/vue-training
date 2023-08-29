@@ -1,3 +1,4 @@
+11 hours + final project left
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -752,3 +753,121 @@ Going to use **Firebase** for this course, since it's a backend database that al
 3. Start in TEST mode
 4. *Take note of the HTTP URL it provides*, this is where we'll pull and push data to
 
+Accessing table data from Firebase
+```js
+// often is a good idea to do this load on mounted()
+fetch('https://xxx.firebaseio.com/surveys.json').then(res => {
+	if(res.ok) {
+		return response.json() // parses data in response into a JSON object
+		// do what we want with the response data
+	}
+	// handle non ok responses here as well (with await or another then() block)
+}).then(json => {
+	// by using arrow key functions we can use 'this' and have it work correctly
+	const results = []
+	for(const id in json) {
+		results.push({ id, ...json[id] })
+		// do something with the json data
+	}
+}).catch(err => {
+	// handle here
+})
+```
+
+Putting table data with Firebase
+
+```js
+fetch('https://xxx.firebaseio.com/surveys.json', {
+	method: 'POST',
+	headers: {
+		'Content-Type': 'application/json'
+	},
+	body: JSON.stringify(json)
+}).catch(err => {
+	// handle this
+})
+```
+
+*You only need headers if there's a body*
+
+## Loading Overlay
+Useful to do, and can be handled by creating a dialog and enabling it to be shown when a `isLoading` custom boolean is set accordingly.  I've been doing this the right way for a while, but it's good to add this kind of overlay to our app
+
+## No Data and Errors
+Be sure to show indicators for no data and indicate errors, this is better for UX.  There isn't a fancy way to do this, use the same method I've been using (check for result length, have an `isError` boolean, etc)
+
+# Routing
+*SPA / Single Page App* - Single HTML file that uses JS to change the page without changing the URL.
+- One problem though: we only have one URL, which is near useless if we wanna share the page.
+	- Routing will solve this, by using a package that'll still let us use a SPA *and* change the URL
+	- *One benefit of using a SPA is that you can maintain state between pages easily*
+
+## Installation and Base Usage
+
+```bash
+npm install --save vue-router
+```
+
+```js
+import { createApp } from 'vue'
+import { createRouter, createWebHistory } from 'vue-router'
+
+import App from './App.vue'
+import TeamsList from './components/TeamList.vue'
+
+const router = createRouter({
+	// how to handle browser history (knowing which page was accessed and allow us to use the back and forward buttons)
+	history: createWebHistory() // use browser's built in mechanism/support
+	routes: [
+		{
+			path: '/',
+			component: App
+		},
+		{
+			path: '/teams',
+			component: TeamsList
+		}
+	],
+	// linkActiveClass: "active-thingy" <!--- you can specify other css classes to use here, if desired
+})
+
+app.use(router)
+
+const app = createApp(App)
+app.mount('#app')
+```
+
+```vue
+// App.vue
+<template>
+	<div>
+		<!-- see here -->
+		<router-view></router-view>
+	</div>
+</template>
+```
+
+## Navigation
+
+```vue
+<template>
+	<div>
+		<!-- won't reload a different page, but will instead switch the component and update the url -->
+		<!-- renders as a <a> tag -->
+		<router-link to="/teams"></router-link>
+	</div>
+</template>
+```
+
+Classes `router-link-active` and `router-link-exact-active` will be added to the anchors (`<a>`/ `<router-link>` ) when they're active/selected, so you can style accordingly (if desired), and/or see which links are in use.
+- `router-link-exact-active` - will only be applied to pages that are EXACTLY matched to the page URL, which could change if we do something like `/teams/2134`
+
+## Dynamic Navigation
+
+```js
+methods: {
+	changePage() {
+		this.$router.push('/teams')
+	}
+}
+```
