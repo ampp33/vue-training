@@ -1,4 +1,5 @@
 11 hours + final project left
+183
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -855,6 +856,7 @@ app.mount('#app')
 		<!-- won't reload a different page, but will instead switch the component and update the url -->
 		<!-- renders as a <a> tag -->
 		<router-link to="/teams"></router-link>
+		<router-link :to="`/teams/${id}`"></router-link>
 	</div>
 </template>
 ```
@@ -862,12 +864,178 @@ app.mount('#app')
 Classes `router-link-active` and `router-link-exact-active` will be added to the anchors (`<a>`/ `<router-link>` ) when they're active/selected, so you can style accordingly (if desired), and/or see which links are in use.
 - `router-link-exact-active` - will only be applied to pages that are EXACTLY matched to the page URL, which could change if we do something like `/teams/2134`
 
+**Gotcha**: if you try to go from `/teams/1243` to `/teams/456` the page won't change!  That's because Vue doesn't destroy the component and re-create it, it cached it, so if you tried to load the data in the `created()` method nothing will change (since the component still exists and is cached by Vue).  However, `$route` will update, so we can add a `watch()` for `$route()` and have that watcher call the `created()` logic!
+
+**Another gotcha**: If your component's loading logic depends on the `$route` that means you *have* to only access this page via the router!  You can change this tho so that the router converts the `this.$router.params.*` to props, by doing the following.  This is a better way to define a component, it seems :)
+
+```js
+routes: [
+	{
+		path: '/teams/:teamId',
+		component: TeamDetails,
+		props: true // <!-- here!  tells the router that the parameters should be passed to the component as props
+	}
+],
+```
+
 ## Dynamic Navigation
 
 ```js
 methods: {
 	changePage() {
 		this.$router.push('/teams')
+	}
+}
+```
+
+## Passing Data with Routes
+
+```js
+routes: [
+	{
+		path: '/teams',
+		component: App
+	},
+	// needs to go before the item below, as otherwise it'd be picked up by the route below
+	{
+		path: '/teams/new',
+		component: TeamsList
+	},
+	{
+		path: '/teams/:teamId',
+		component: TeamDetails
+	}
+],
+```
+
+```js
+created() {
+	this.$route.path // /teams/id (ex: 234)
+	this.$route.params.teamId // 234
+}
+```
+
+## Redirecting and Catch All Routes
+
+```js
+routes: [
+	{
+		path: '/', // root, important for hitting the base URL
+		component: App
+	}
+]
+```
+
+If you always want *something* in the URL and not just allow slash, then you can do a redirect like this:
+
+```js
+routes: [
+	{
+		path: '/', // root, important for hitting the base URL
+		redirect: '/teams' // path must exist in the routes, obviously
+	}
+]
+```
+
+You can also use an *alias*, but the *URL won't change in this case*:
+
+```js
+routes: [
+	{
+		path: '/teams',
+		component: TeamsList,
+		alias: '/'
+	}
+]
+```
+
+*Handling undefined routes*
+
+```js
+routes: [
+	... // lots of other routes here
+	{
+		path: '/:notFound(.*)', // regex dynamic expression that accepts any character combo
+		component: PageNotFound // or could redirect to another known route
+	}
+]
+```
+
+## Nested Routes
+
+```js
+routes: [
+	{
+		path: '/teams',
+		component: TeamMembers,
+		children: [
+			{
+				path: ':teamId',
+				component: UserList
+			}
+		]
+	}
+]
+```
+
+NOTE: `<router-view>` only handles top level routes listed in `routes`, so we can't rely on `<router-view>` to display `children` routes (super lame).  *Instead, you have to add another `<router-view>` tag inside the parent component's `<template>`*, like this:
+
+```vue
+<!-- TeamMembers.vue -->
+<template>
+	<router-view></router-view>
+<template>
+```
+
+*Deeply nesting*
+This seemed pretty silly, so I'm not going to take notes on it, since I can't imagine this solution would be considered "ok".  Look this up on Google if needed in the future.
+
+## Query Params
+
+```js
+this.$route.query.queryPropertyNameHere
+```
+
+*NOTE*: these are not provided as props, but that's okay since query params are optional by default.
+
+## Multiple Router Views on the Same Level
+
+You can add multiple `<router-view>` entries on a single page, which can essentially allow you to present multiple components on a single page.  You need to define the multiple components in the `routes` array and give the routes names (tho you can have one default route):
+
+```vue
+<template>
+	<router-view></router-view>
+	<router-view name="footer"></router-view>
+</template>
+```
+
+```js
+routes: [
+	{
+		path: '/teams',
+		components: { default: TeamView, footer: FooterThing }
+	}
+]
+```
+
+## Controlling Scrolling Behavior
+Allows you to scroll where you want on the page, like scrolling to the top.  You can configure it like this:
+
+```js
+{
+	routes: [],
+	scrollBehavior(to, from, savedPosition) {
+		// to - page we ended up on ($route object)
+		// from - page we came from ($route object)
+		// savedPosition - only set if you're using the 'back' button (tells you where the user was on the page when they left the page) {left: 0, top: 2}
+
+		if(savedPosition) return savedPosition // if we go back, then we go back to the position we were on the previous page
+
+		// indicates to scroll to the top left part of the page
+		return {
+			left: 0,
+			top: 0
+		}
 	}
 }
 ```
