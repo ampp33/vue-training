@@ -796,7 +796,6 @@ Useful to do, and can be handled by creating a dialog and enabling it to be show
 
 ## No Data and Errors
 Be sure to show indicators for no data and indicate errors, this is better for UX.  There isn't a fancy way to do this, use the same method I've been using (check for result length, have an `isError` boolean, etc)
-
 # Routing
 *SPA / Single Page App* - Single HTML file that uses JS to change the page without changing the URL.
 - One problem though: we only have one URL, which is near useless if we wanna share the page.
@@ -1039,3 +1038,187 @@ Allows you to scroll where you want on the page, like scrolling to the top.  You
 	}
 }
 ```
+
+## Navigation Guards
+Useful with authentication to restrict pages based on their allowed accesses, and stopping users from redirecting to another page when their current page has unsaved work.
+
+`Guard` - functions called automatically by router when a navigation is began
+
+### Global Guard
+```js
+const router = createRouter({
+	...
+})
+
+// called by router before we navigate from one page to another
+router.beforeEach((to, from, next) => {
+	// to - page we ended up on ($route object)
+	// from - page we came from ($route object)
+	// next - function we have to call to either confirm or cancel the navigation
+	// calling next() allows the navigation, while next(false) cancels the navigation
+	// can also pass a string or a location object, which tells next() where we want to route to (ex: next('/teams') or next({name: 'team-members', params: { teamId: 32 }}))
+})
+```
+
+### Individual Route Guards
+```js
+routes: {
+	{
+		path: '/users',
+		component: UserList,
+		// see here!
+		beforeEnter(to, from, next) {
+			// to - page we ended up on ($route object)
+			// from - page we came from ($route object)
+			// next - function we have to call to either confirm or cancel the navigation
+		}
+	}
+}
+```
+
+If you don't want to define this in the router config, you can define this functionality on the component itself.  This works the same was as the logic above.
+
+```js
+{
+	methods: {},
+	// here
+	beforeRouteEnter(to, from, next) {}
+}
+```
+
+Guard Execution Order
+1. Router config
+2. Individual route config
+3. Component hook
+
+`beforeRouteUpdate(to, from, next)` - hook that's called before a component is re-used with new route data (ex: switch from `/teams/1243` to `/teams/654`)
+- Alternative to using a `watch`, but would be less flexible (since it only works with routing)
+
+### After Each Guard
+Only runs after a navigation has been allowed, and could be nice to sending analytics to your server
+
+```js
+router.afterEach((to, from) => {})
+```
+
+### Route Leave Guard
+Before guards are already being ran, but this can be useful if you want to deny the user from being able to leave the page, *like if they have unsaved work*.  We couldn't use `unmounted()` in this case because the component would already be removed and the user couldn't use the page anymore.
+
+```js
+{
+	methods: {},
+	beforeRouteLeave(to, from, next)
+}
+```
+
+# Animation
+
+Simple way to animate a dialog appearing
+```css
+keyframes identifier-here {
+	0% {
+		transform: translateX(-100px) scale(0.8);
+	}
+
+	100% {
+		transform: translateX(0px) scale(1);
+	}
+}
+
+dialog {
+	animation: idenifier-here .5s ease-out forwards;
+}
+```
+
+Now when you add this class to the DOM element (or the element is added to th edom) the animation will immediately play, which is fine if we're using `v-if`, and should do what we want.  However, how do we animate when `v-if` evaluates to `false`, since that'll result in the element no longer being attached to the DOM?  Vue can help with appearance and disappearance, by delaying attaching or detaching elements after animations are done.
+
+*All of this is only useful if you're using `v-if`*
+
+`<transition>` - wrap single element that you want to handle animation with.  When that single element is mounted and unmounted Vue will allow it to transition.  It adds a few CSS utility classes:
+- Can also use this to apply an animation
+- If you have a more complex animation, then only use the `*-*-active` CSS classes, and use the `animation` CSS property
+
+```css
+*-enter-from // added first, removed after animation is done
+*-enter-to // added right when animation finishes
+*-enter-active // added as soon as animation starts and leaves when the enter animation ends
+```
+
+Vue will analyze the duration of each of these classes, and will add these classes over the duration.
+
+Have similar concept for elements being unmounted:
+
+```css
+*-leave-from // added first, removed after animation is done
+*-leave-to // added right when animation finishes
+*-leave-active // added as soon as animation starts and goes to end, and stays on while the element exists
+```
+
+Note that these classes fall-thru to the base element if you wrap a custom component with `<transition>`
+## Example
+
+```vue
+<template>
+	<div>
+		<transition>
+			<div>Check It</div>
+		</transition>
+	</div>
+</template>
+
+<style>
+.v-enter-from {
+	opacity: 0;
+	transform: translateY(30px);
+}
+
+.v-enter-active {
+	transition: all .3s ease-out; /* watch all properties that can be changed in CSS */
+}
+
+.v-enter-to {
+	opacity: 1;
+	transform: translateY(0px);
+}
+
+
+.v-leave-from {
+	opacity: 1;
+	transform: translateY(0px);
+}
+
+.v-leave-active {
+	transition: all .3s ease-in; /* watch all properties that can be changed in CSS */
+}
+
+.v-leave-to {
+	opacity: 0;
+	transform: translateY(-30px); /* move out */
+}
+</style>
+```
+
+## Using Custom CSS Classes (multiple `transition` tags)
+Works, but Vue adds the same CSS classes for all `<transition>` tags!  Can customize the CSS classes like this:
+
+```vue
+<template>
+	<transition name="blah">
+</template>
+
+<style>
+.blah-enter-active {}
+.blah-leave-active {}
+```
+
+You can even replace the entire CSS class name, if need-be:
+
+```vue
+<template>
+	<transition enter-to-class="do-stuff">
+</template>
+
+<style>
+.do-stuff {}
+```
+
