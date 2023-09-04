@@ -1,5 +1,5 @@
 11 hours + final project left
-183
+210
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1221,4 +1221,46 @@ You can even replace the entire CSS class name, if need-be:
 <style>
 .do-stuff {}
 ```
+
+## Transitioning Between Multiple Elements
+- Normally `<transition>` requires you to only give it one child, but there are some exceptions:
+	- If only one of the child elements is actually added to the DOM at once, then you're fine.  So something like this would be okay, but Vue doesn't understand the logic in the `v-if` statements, so you have to use `v-else` instead to make it more obvious to Vue.
+
+```html
+<transition mode="in-out">
+	<button v-if="showButton">Show</button>
+	<button v-else>Hide</button>
+</transition>
+```
+
+`mode` attribute - has two possible value: `in-out` or `out-in`, and this controls whether first the leaving element should be animated, or the new element (controls which element will be animated first, instead of animating both at the same time).
+
+## Transition Events
+
+```vue
+<transition name="stuff" @before-enter="before-wrapped-elment-enters-the-dom" @enter="triggered-after-enter" @after-enter="triggered-after-enter" @before-leave="before-wrapped-element-leaves-the-dom" @leavleavee="triggered-after-before-leave" @after-leave="triggered-after-leave">
+```
+
+- before-enter
+- enter
+- after-enter
+- before-leave
+- leave
+- after-leave
+- enter-cancelled (called when animation is cancelled)
+- leave-cancelled (called when animation is cancelled)
+
+Each of these action event methods receive the `element` object, of the element being modified, and a `done` function that you can call to tell Vue that you're done (useful for async work/styling)
+
+## Using JS for Transitions instead of CSS
+Supported by `transition` component, and useful if you wanna use a 3rd party animation JS lib (useful page scrolling based animations or more complex work like that)
+
+## Disabling CSS Transitions
+
+**Come back and finish this section at the end**
+
+# Vuex
+Useful for replacing `provide`/`inject` between components across your whole app.  Better way to manage Vue data?
+
+*Library for managing global state*
 
