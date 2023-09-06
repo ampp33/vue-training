@@ -1,5 +1,5 @@
-11 hours + final project left
-210
+6 hours + final project left
+223
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1449,4 +1449,100 @@ const store = createStore({
 ```
 
 ## Mapper Helpers
+Can import `mapGetters` which will return an object that contains all of your mappers, that you can easily spread (`...mapGetters`) into your `computed` section.  This can be helpful so that you don't have to drill down to get each getter method.
 
+```vue
+<script>
+import { mapGetters } from 'vuex'
+
+export default {
+	computed: {
+		...mapGetters([ /* name of getters you want returned */ ])
+	}
+}
+</script>
+```
+
+Have something similar for *state* and *mutations* and *actions* (`mapActions`) too, which works the same way (with the same parameters).
+
+You can also rename these method names by passing an object as a parameter:
+
+```js
+methods: {
+	...mapActions({
+		alternativeNameYouWantToUse: 'doStuff'
+	})
+}
+```
+
+## Example: Adding More State
+
+```js
+const store = createStore({
+	state() {
+		return {
+			loggedIn: false
+		}
+	},
+	mutations: {
+		setLoggedIn(currentState, newValue) {
+			currentState.loggedIn = newValue
+		}
+	},
+	actions: {
+		login(context) {
+			context.commit('setLoggedIn', true)
+		},
+		logout(context) {
+			context.commit('setLoggedIn', false)
+		}
+	},
+	getters: {
+		isLoggedIn(state) {
+			return state.loggedIn
+		}
+	}
+})
+```
+
+```vue
+<!-- showing/hiding other base-container is simple enough I won't describe it here -->
+
+<template>
+	<button v-if="!$store.getters.isLoggedIn" @click="$store.dispatch('login')">Login</button>
+	<button v-else @click="$store.dispatch('logout')">Logout</button>
+</template>
+```
+
+## Organizing Your Store with Modules
+
+Handy way to move certain specific state data, methods, etc into separate objects, so that you can merge those object(s) back into the store.  This doesn't affect store behavior whatsoever, it just *makes it easier to segregate certain bits of the store so it's easier to read and manage*.
+
+```js
+const authModule = {
+	state() {
+		return {}
+	},
+	mutations: {},
+	getters: {},
+	actions: {}
+}
+
+const store = createStore({
+	// note the new 'modules' section here, which will take the supplied modules and will MERGE them into the store, and you don't have to do anything special to access the module(s)
+	modules: { auth: authModule },
+	state() {},
+	mutations: {}
+})
+```
+
+Mind you, this merging behavior is a bit funky, because state inside of a module is actually treated as a 'local state' inside the module, while `getters`, `actions`, and `mutations` are global, you can access them on the main store.  If you have getters, actions, etc that try to access a state value that's outside of the module it won't work, because the state inside the module is 'local'.  You can work around this though by using specific parameters on some of the methods, like the `getters`:
+
+```js
+const module = {
+	getters: {
+		// note 'rootState' and 'rootGetters'
+		getStuff(state, getters, rootState, rootGetters) {}
+	}
+}
+```
