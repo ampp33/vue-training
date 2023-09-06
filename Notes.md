@@ -1264,3 +1264,189 @@ Useful for replacing `provide`/`inject` between components across your whole app
 
 *Library for managing global state*
 
+It's actually VERY easy to create, access, and change global state data, *it works the exact way you think it should with Vue*, no funky methods or anything.
+
+```js
+import { createStore } from 'vuex'
+
+const store = createStore({
+	state() {
+		return {
+			message: ''
+		}
+	}
+})
+
+app.use(store)
+```
+
+```vue
+<template>
+	<div>{{ $store.state.message }}
+</template>
+
+<script>
+{
+	methods: {
+		getStoreData() {
+			console.log(this.$store.state.message)
+			this.$store.state.message = 'hello!'
+		}
+	}
+}
+</script>
+```
+
+## Mutations
+Forces us to use a certain approach for updating state/data that's predicable and less error prone.  It turns out that the above method for accessing and updating state data doesn't fit Vuex's philosophy, and is still error prone.
+
+Vuex says we should instead communicate with the state *indirectly* (via *mutations*, methods that let you update state via those methods), that way all accessors and setters of data do it in the same uniform way.  *This helps reduce code duplication, especially if you're updating more complex objects or have similar state update logic in multiple places*.
+
+```js
+const store = createStore({
+	state() {
+		return {
+			message: ''
+		}
+	},
+	mutations: {
+		setMessage(currentState, newMessage) {
+			currentState.message = newMessage
+		}
+	}
+})
+```
+
+```vue
+<template>
+	<div>{{ $store.state.message }}
+</template>
+
+<script>
+{
+	methods: {
+		getStoreData() {
+			console.log(this.$store.state.message)
+			this.$store.commit('setMessage', 'hello!')
+			// or
+			this.$store.commit({
+				type: 'setMessage',
+				value: 'hello!'
+			})
+		}
+	}
+}
+</script>
+```
+
+## Getters
+
+Methods for getting values, useful again with complex data, and to avoid duplicate logic.
+
+```js
+const store = createStore({
+	state() {
+		return {
+			message: '',
+			coolMessage: ''
+		}
+	},
+	mutations: {
+		setMessage(currentState, newMessage) {
+			currentState.message = newMessage
+		}
+	},
+	getters: {
+		getMessage(state) {
+			return state.message
+		},
+		getCoolerMessage(_, getters) {
+			// NOTE: the usage of the 'getters' object!
+			return getters.getMessage + ' check it out.'
+		}
+	}
+})
+```
+
+```vue
+<template>
+	<div>{{ $store.getters.getMessage }}
+</template>
+
+<script>
+{
+	methods: {
+		getStoreData() {
+			// NOTE: we don't execute the getter, we just point at the method
+			console.log(this.$store.getters.getMessage)
+		}
+	}
+}
+</script>
+```
+
+## Actions
+Sometimes you have code that runs async (ex: an API call), but mutations must be synchronous.  This is a problem because if multiple mutations execute they should all get the current state, but if another mutation didn't commit yet it could lead to unexpected values in your app.
+
+`Actions` commit mutations, and allow you to execute async code.  *It's considered a good practice to always put Actions between components and Mutations even tho components could commit mutations themselves.  This is basically a safeguard to ensure that you never put async code inside mutations.*
+
+
+```js
+const store = createStore({
+	state() {
+		return {
+			message: '',
+			coolMessage: ''
+		}
+	},
+	mutations: {
+		setMessage(currentState, newMessage) {
+			currentState.message = newMessage
+		}
+	},
+	actions: {
+		doStuff(context, payload) {
+			// 'context' contains a lot of cool stuff:
+			// context.commit
+			// context.dispatch
+			// context.getters
+			// context.rootGetters
+			// context.state <!-- don't mutate data with this tho
+			setTimeout(() => {
+				context.commit('setMessage', 'hello!')
+			}, 2000)
+		}
+	},
+	getters: {
+		getMessage(state) {
+			return state.message
+		},
+		getCoolerMessage(_, getters) {
+			// NOTE: the usage of the 'getters' object!
+			return getters.getMessage + ' check it out.'
+		}
+	}
+})
+```
+
+```vue
+<template>
+	<div>{{ $store.getters.getMessage }}
+</template>
+
+<script>
+{
+	methods: {
+		getStoreData() {
+			console.log(this.$store.getters.getMessage)
+		},
+		setStoreData() {
+			this.$store.dispatch('doStuff', 'payload-here')
+		}
+	}
+}
+</script>
+```
+
+## Mapper Helpers
+
