@@ -1546,3 +1546,56 @@ const module = {
 	}
 }
 ```
+
+## Namespacing Modules
+Making an entire "local", to make sure they're clearly separated from eachother, to avoid name clashes and bad practices with your store.
+
+```js
+const module = {
+	// tells Vuex the entire state is detached
+	namespaced: true
+}
+```
+
+If you do this though then you have to access your non-data/`state` info in a different way, even within the module you namespaced, because the data is no longer present in the base state, and you now need to specify the namespace.  *The namespace is the key you specified inside the `modules` definition inside the `createStore` call*.  In this example, the namespace would be 'auth':
+
+```js
+const authModule = {
+	state() {
+		return {}
+	}
+}
+
+const store = createStore({
+	modules: { auth: authModule }
+})
+```
+
+Here's how you'd access the namespaced data, as an example:
+
+```js
+export default {
+	computed: {
+		isAuth() {
+			return this.$store.getters['auth/isAuth']
+		},
+		// or
+		...mapGetters('auth', ['isAuth'])
+	},
+	methods: {
+		login() {
+			this.$store.dispatch('auth/setAuth', true)
+		}
+	}
+}
+```
+
+## Structuring Vuex Code & Files
+Can move to `store.js` file that you can import into `main.js` to create the store, so that your `main.js` doesn't get too busy... tho we can go even further.  Instead you can could even:
+1. create a separate directory called `store`
+2. in there you have `index.js` (main store)
+3. Have separate files for `actions`, `mutations`, `getters`, etc... 
+4. Separate sub-directories for modules (with an `index.js` in the root of each dir)
+5. Use imports and exports in these files to connect everything together
+
+## A Challenge!
