@@ -21,7 +21,7 @@ const store = createStore({
     },
     mutations: {
         addItemToCart(currentState, item) {
-            const itemIndex = currentState.cart.findIndex((i) => i.id = item.id)
+            const itemIndex = currentState.cart.findIndex((i) => i.id == item.id)
             if(itemIndex == -1) currentState.cart.push({ ...item })
             else currentState.cart[itemIndex].qty++
         },

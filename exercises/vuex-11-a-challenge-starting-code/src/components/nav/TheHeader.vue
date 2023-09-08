@@ -28,8 +28,7 @@
 export default {
   computed: {
     numItemsInCart() {
-      console.log(this.$store.getters.getItemsInCart)
-      return this.$store.getters.getItemsInCart.reduce((curr, acc) => acc + curr.qty, 0)
+      return this.$store.getters.getItemsInCart.reduce((acc, curr) => acc + curr.qty, 0)
     }
   }
 };
