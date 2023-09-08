@@ -1,13 +1,16 @@
 import ListCoaches from './components/ListCoaches.vue'
 import CoachDetails from './components/CoachDetails.vue'
 import RegisterCoach from './components/RegisterCoach.vue'
-import RegisterCoach from './components/ContactCoach.vue'
+import ContactCoach from './components/ContactCoach.vue'
 import Requests from './components/Requests.vue'
+
+import { createWebHistory } from 'vue-router'
 
 export default {
     routes: [
         {
             path: '/coaches',
+            alias: '/',
             component: ListCoaches
         },
         {
@@ -16,16 +19,18 @@ export default {
             props: true
         },
         {
-            path: 'register-coach',
+            path: '/register-coach',
             component: RegisterCoach
         },
         {
-            path: 'contact-coach',
-            component: ContactCoach
+            path: '/contact-coach/:id',
+            component: ContactCoach,
+            props: true
         },
         {
-            path: 'requests',
+            path: '/requests',
             component: Requests
         }
-    ]
+    ],
+    history: createWebHistory()
 }
