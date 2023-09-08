@@ -1599,3 +1599,61 @@ Can move to `store.js` file that you can import into `main.js` to create the sto
 5. Use imports and exports in these files to connect everything together
 
 ## A Challenge!
+Done!
+
+# Main Project (Find a Coach)
+- AllCoaches
+	- Frontend/Backend/Career checkboxes - selecting filters list
+	- List of coaches
+		- Refresh (pulls list of coaches from *Firebase*)
+		- Register Coach - page to register a coach that contains the data laid out below
+		- List all coaches
+	- View Coach Details
+		- Lists details
+		- Has a contact button
+- Requests
+	- List requests (added via "Contact Coach")
+- Send Request
+	- Form to enter email and message
+- RegisterCoach
+	- Form *with validation* that lets you enter the coach's data structure in, and will send the coach to Firebase
+
+## Pages
+```
+/coaches
+/coach/:coachId
+/register-coach
+/contact-coach
+/requests
+```
+
+
+
+## Data Model
+**Coach
+```json
+{
+	"id": "124",
+	"firstName": "Bob",
+	"lastName": "Johnson",
+	"rate": "39",
+	"tags": ["frontend", "backend", "career"],
+	"description": "sucks at surfing"
+}
+```
+
+**Request** 
+```json
+{
+	"id": "abc",
+	"coachId": "124",
+	"message": "hello there",
+	"email": "some@dude.com"
+}
+```
+
+## Mutations
+- Register coach
+- Set coaches (called by DB load)
+- Contact Coach
+- Set Requests (called by DB load)
