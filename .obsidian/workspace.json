@@ -149,6 +149,7 @@
   },
   "active": "ae4be6aa582f9ba9",
   "lastOpenFiles": [
+    "exercises/find-a-coach/src/components/UI/Field.vue",
     "exercises/find-a-coach/src/dummy-coaches.js",
     "exercises/find-a-coach/src/components/UI/Card.vue",
     "exercises/find-a-coach/src/components/ContactCoach.vue",
@@ -159,7 +160,6 @@
     "exercises/find-a-coach/src/components/Requests.vue",
     "exercises/find-a-coach/src/components/CoachDetails.vue",
     "exercises/find-a-coach/src/components/ListCoaches.vue",
-    "exercises/find-a-coach/src/components/UI/TheHeader.vue",
     "exercises/find-a-coach/node_modules/vuex/README.md",
     "exercises/find-a-coach/node_modules/vuex/CHANGELOG.md",
     "exercises/find-a-coach/node_modules/vue-router/README.md",

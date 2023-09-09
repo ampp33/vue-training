@@ -12,7 +12,7 @@ export default {
 
 <style scoped>
 div {
-    display: inline;
+    display: inline-block;
     padding: 10px;
     margin: 2px;
     color: white;

@@ -22,8 +22,8 @@
                     <h3>{{ coach.firstName }} {{ coach.lastName }}</h3>
                     <h4>${{ coach.rate }}/hour</h4>
                     <tag v-for="tag in coach.tags" :key="tag" :text="tag" :bgColor="tagTextColors[tag]" />
-                    <div style="margin-top: 18px">
-                        <router-link :to="'/contact-coach/' + coach.id"><button>Contact</button></router-link>
+                    <div>
+                        <router-link :to="'/coach/' + coach.id"><button>Contact</button></router-link>
                         <router-link :to="'/coach/' + coach.id"><button>View Details</button></router-link>
                     </div>
                 </div>

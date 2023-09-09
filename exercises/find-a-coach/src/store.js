@@ -24,17 +24,17 @@ export default {
     actions: {
         registerCoach(context, coach) {
             // TODO post to firebase, and do dispatch in promise 'then'
-            context.dispatch('registerCoach', coach)
+            context.commit('registerCoach', coach)
         },
         setCoaches(context, coaches) {
-            context.dispatch('setCoaches', coaches)
+            context.commit('setCoaches', coaches)
         },
         addRequest(context, request) {
             // TODO post to firebase, and do dispatch in promise 'then'
-            context.dispatch('addRequest', request)
+            context.commit('addRequest', request)
         },
         setRequests(context, requests) {
-            context.dispatch('setRequests', requests)
+            context.commit('setRequests', requests)
         }
     },
     getters: {
