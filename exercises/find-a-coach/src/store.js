@@ -1,9 +1,9 @@
-import dummyCoaches from './dummy-coaches'
+// import dummyCoaches from './dummy-coaches'
 
 export default {
     state() {
         return {
-            coaches: [...dummyCoaches],
+            coaches: [],
             requests: []
         }
     },

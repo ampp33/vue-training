@@ -21,6 +21,20 @@ export default {
     components: {
         TheHeader,
         Card
+    },
+    methods: {
+        loadRequests() {
+            fetch('https://find-a-coach-694d9-default-rtdb.firebaseio.com/requests.json')
+                .then(res => res.json())
+                .then(json => {
+                    const requests = []
+                    for(const requestId in json) requests.push({ id: requestId, ...json[requestId] })
+                    this.$store.dispatch('setRequests', requests)
+                })
+                .catch(err => {
+                    console.error('failed to load requests!', err)
+                })
+        }
     }
 }
 </script>

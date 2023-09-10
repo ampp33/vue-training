@@ -50,13 +50,27 @@ export default {
     },
     methods: {
         submit() {
-            this.$store.dispatch('addRequest', {
-                id: new Date().valueOf(),
+            // store in firebase
+            const id = Math.random().toString(36).slice(2, 10)
+            const request = {
                 coachId: this.id,
                 email: this.email,
                 message: this.message
+            }
+            fetch(`https://find-a-coach-694d9-default-rtdb.firebaseio.com/requests/${id}.json`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(request)
             })
-            this.$router.push('/')
+            .then(() => {
+                this.$store.dispatch('addRequest', request)
+                this.$router.push('/')
+            })
+            .catch(err => {
+                console.error('failed to store request!', err)
+            })
         }
     },
     mounted() {

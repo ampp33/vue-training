@@ -14,7 +14,7 @@
         </card>
         <card>
             <div>
-                <button>Refresh</button>
+                <button @click="loadCoaches">Refresh</button>
                 <router-link to="/register-coach"><button>Register Coach</button></router-link>
             </div>
             <div>
@@ -49,10 +49,27 @@ export default {
             tagTextColors: {frontend: 'red', backend: 'purple', career: 'green'}
         }
     },
+    methods: {
+        loadCoaches() {
+            fetch('https://find-a-coach-694d9-default-rtdb.firebaseio.com/coaches.json')
+                .then(res => res.json())
+                .then(json => {
+                    const coaches = []
+                    for(const coachId in json) coaches.push({ id: coachId, ...json[coachId] })
+                    this.$store.dispatch('setCoaches', coaches)
+                })
+                .catch(err => {
+                    console.error('failed to load coaches!', err)
+                })
+        }
+    },
     computed: {
         coaches() {
             return this.$store.getters.getCoaches.filter(coach => coach.tags.some(tag => this.filters.includes(tag)))
         }
+    },
+    mounted() {
+        this.loadCoaches()
     }
 }
 </script>

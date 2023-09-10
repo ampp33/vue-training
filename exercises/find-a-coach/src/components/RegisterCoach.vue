@@ -6,6 +6,7 @@
             <field id="firstName" name="First Name" type="text" v-model="firstName" :validator="validateNotEmpty" />
             <field id="lastName" name="Last Name" type="text" v-model="lastName" :validator="validateNotEmpty" />
             <field id="rate" name="Rate" type="number" v-model="rate" :validator="validateNonNegative" />
+            <textarea v-model="description" cols="60" rows="10"></textarea>
             <div class="field">
                 <label>Categories</label><br>
                 <input type="checkbox" v-model="tags" value="frontend" id="frontend"/>
@@ -39,6 +40,7 @@ export default {
             firstName: '',
             lastName: '',
             rate: 0,
+            description: '',
             tags: []
         }
     },
@@ -47,14 +49,29 @@ export default {
             if(this.validateNotEmpty(this.firstName).valid
                 && this.validateNotEmpty(this.lastName).valid
                 && this.validateNonNegative(this.rate).valid) {
-                    this.$store.dispatch('registerCoach', {
-                        id: new Date().valueOf(),
+                    // store in firebase
+                    const id = Math.random().toString(36).slice(2, 10)
+                    const coach = {
                         firstName: this.firstName,
                         lastName: this.lastName,
                         rate: this.rate,
+                        description: this.description,
                         tags: this.tags
+                    }
+                    fetch(`https://find-a-coach-694d9-default-rtdb.firebaseio.com/coaches/${id}.json`, {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify(coach)
                     })
-                    this.$router.push('/')
+                    .then(() => {
+                        this.$store.dispatch('registerCoach', coach)
+                        this.$router.push('/')
+                    })
+                    .catch(err => {
+                        console.error('failed to store coach!', err)
+                    })
                 }
         },
         validateNotEmpty(value) {
