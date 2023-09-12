@@ -1,23 +1,25 @@
 <template>
-    <the-header title="Register Coach" />
-    <div class="content">
-        <card>
-            <h2>Coach Details</h2>
-            <field id="firstName" name="First Name" type="text" v-model="firstName" :validator="validateNotEmpty" />
-            <field id="lastName" name="Last Name" type="text" v-model="lastName" :validator="validateNotEmpty" />
-            <field id="rate" name="Rate" type="number" v-model="rate" :validator="validateNonNegative" />
-            <textarea v-model="description" cols="60" rows="10"></textarea>
-            <div class="field">
-                <label>Categories</label><br>
-                <input type="checkbox" v-model="tags" value="frontend" id="frontend"/>
-                <label for="frontend">Frontend</label>
-                <input type="checkbox" v-model="tags" value="backend" id="backend"/>
-                <label for="backend">Backend</label>
-                <input type="checkbox" v-model="tags" value="career" id="career"/>
-                <label for="career">Career</label>
-            </div>
-            <button type="button" @click="submit">Submit</button>
-        </card>
+    <div>
+        <!-- <the-header title="Register Coach" /> -->
+        <div class="content">
+            <card>
+                <h2>Coach Details</h2>
+                <field id="firstName" name="First Name" type="text" v-model="firstName" :validator="validateNotEmpty" />
+                <field id="lastName" name="Last Name" type="text" v-model="lastName" :validator="validateNotEmpty" />
+                <field id="rate" name="Rate" type="number" v-model="rate" :validator="validateNonNegative" />
+                <textarea v-model="description" cols="60" rows="10"></textarea>
+                <div class="field">
+                    <label>Categories</label><br>
+                    <input type="checkbox" v-model="tags" value="frontend" id="frontend"/>
+                    <label for="frontend">Frontend</label>
+                    <input type="checkbox" v-model="tags" value="backend" id="backend"/>
+                    <label for="backend">Backend</label>
+                    <input type="checkbox" v-model="tags" value="career" id="career"/>
+                    <label for="career">Career</label>
+                </div>
+                <button type="button" @click="submit">Submit</button>
+            </card>
+        </div>
     </div>
 </template>
 

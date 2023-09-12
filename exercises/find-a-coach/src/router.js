@@ -2,6 +2,7 @@ import ListCoaches from './components/ListCoaches.vue'
 import CoachDetails from './components/CoachDetails.vue'
 import RegisterCoach from './components/RegisterCoach.vue'
 import Requests from './components/Requests.vue'
+import NotFound from './components/NotFound.vue'
 
 import { createWebHistory } from 'vue-router'
 
@@ -24,6 +25,10 @@ export default {
         {
             path: '/requests',
             component: Requests
+        },
+        {
+            path: '/:notFound(.*)',
+            component: NotFound
         }
     ],
     history: createWebHistory()

@@ -1,28 +1,30 @@
 <template>
-    <the-header title="Coach Details"></the-header>
-    <div v-if="coach" class="content">
-        <card>
-            <h3>First Name</h3>
-            {{ coach.firstName }}
-            <h3>Last Name</h3>
-            {{ coach.lastName }}
-            <h3>Rate</h3>
-            ${{ coach.rate }}/hr
-            <h3>Tags</h3>
-            <tag v-for="tag in coach.tags" :key="tag" :text="tag" :bgColor="tagTextColors[tag]" />
-        </card>
-        <card>
-            <h2>Interested?  Reach out now!</h2>
-            <div>
-                <field id="email" name="Email" type="text" v-model="email" />
-                <label for="message">Message</label><br>
-                <textarea v-model="message" cols="60" rows="10"></textarea>
-            </div>
-            <button type="button" @click="submit">Submit</button>
-        </card>
-        <card>
-            {{ coach.description }}
-        </card>
+    <div>
+        <!-- <the-header title="Coach Details"></the-header> -->
+        <div v-if="coach" class="content">
+            <card>
+                <h3>First Name</h3>
+                {{ coach.firstName }}
+                <h3>Last Name</h3>
+                {{ coach.lastName }}
+                <h3>Rate</h3>
+                ${{ coach.rate }}/hr
+                <h3>Tags</h3>
+                <tag v-for="tag in coach.tags" :key="tag" :text="tag" :bgColor="tagTextColors[tag]" />
+            </card>
+            <card>
+                <h2>Interested?  Reach out now!</h2>
+                <div>
+                    <field id="email" name="Email" type="text" v-model="email" />
+                    <label for="message">Message</label><br>
+                    <textarea v-model="message" cols="60" rows="10"></textarea>
+                </div>
+                <button type="button" @click="submit">Submit</button>
+            </card>
+            <card>
+                {{ coach.description }}
+            </card>
+        </div>
     </div>
 </template>
 

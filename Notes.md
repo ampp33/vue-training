@@ -1259,6 +1259,19 @@ Supported by `transition` component, and useful if you wanna use a 3rd party ani
 
 **Come back and finish this section at the end**
 
+## Transitioning Between Routes
+Have to use this funky mechanism to identify components to transition between with the router.
+
+```html
+<template>
+	<router-view v-slot="slotProps">
+		<transition name="route" mode="out-in">
+			<component :is="slotProps.Componenent"></component>
+		</transition>
+	</router-view>
+</template>
+```
+
 # Vuex
 Useful for replacing `provide`/`inject` between components across your whole app.  Better way to manage Vue data?
 
