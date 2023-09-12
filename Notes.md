@@ -1670,3 +1670,40 @@ Done!
 - Set coaches (called by DB load)
 - Contact Coach
 - Set Requests (called by DB load)
+
+# Vue and Authentication
+## How Auth works in Vue/SPAs
+- Bit different than traditional auth where we use some kind of server side language
+
+```mermaid
+flowchart TD
+	A[Backend Server]<-->B[Restricted Data & Requests]
+	A<-->C[Public Data & Requests]
+	D[Vue App/SPA]-->E[Send Requests]
+	E-->F[Get Coaches]
+	F-->C
+	D-->G[Fetch Coach Requests]
+	G-->H[Create Coach]
+	H-->B
+```
+
+*Our backend in this case is Firebase, but in this case it could be any HTTP server.*
+
+The tricky part here is that a backend usually has both public and private resources!  With this setup, the website is usually detached from the backend, and the backend doesn't usually know what the frontend is.  Server doesn't care about the Vue app.
+
+For auth, *we'll have to start with some sort of login data being sent to the backend*, and on traditional websites the server would send a session ID to the frontend that it'd hold onto.  That's now how it'll work here though.  *In our case the server won't store any info, but it will send a token back to the Vue app once the login data is verified.*  The token tho is created such that only the server can validate it.  *The token will then be attached to outgoing requests, and the backend will grant access if the token is valid.*
+
+## Locking/Protecting Backend Resources
+- Want to lock down Firebase resources unless authenticated
+	- Viewing reqs and registering as a coach should only be available to auth'd users
+	- If you're using your backend then you'll have to write this code on your own
+	- How does this work?
+		- Want to allow reading to coaches, but restrict writing
+		- Creating requests is allowed to anyone, but reading reqs is restricted
+		- Update *rules*!
+
+```js
+{
+	r""
+}
+```

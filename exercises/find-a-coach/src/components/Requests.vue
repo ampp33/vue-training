@@ -24,6 +24,9 @@ export default {
         TheHeader,
         Card
     },
+    mounted() {
+        this.loadRequests()
+    },
     methods: {
         loadRequests() {
             fetch('https://find-a-coach-694d9-default-rtdb.firebaseio.com/requests.json')
