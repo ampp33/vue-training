@@ -129,6 +129,16 @@
                 "file": "Notes.md"
               }
             }
+          },
+          {
+            "id": "256fc1311423721e",
+            "type": "leaf",
+            "state": {
+              "type": "all-properties",
+              "state": {
+                "sortOrder": "frequency"
+              }
+            }
           }
         ]
       }
@@ -149,6 +159,7 @@
   },
   "active": "ae4be6aa582f9ba9",
   "lastOpenFiles": [
+    "Pasted image 20230914214437.png",
     "exercises/find-a-coach/src/components/NotFound.vue",
     "exercises/find-a-coach/src/components/UI/Field.vue",
     "exercises/find-a-coach/src/dummy-coaches.js",
@@ -159,7 +170,6 @@
     "exercises/find-a-coach/src/components/RegisterCoach.vue",
     "exercises/find-a-coach/src/components/SendRequest.vue",
     "exercises/find-a-coach/src/components/Requests.vue",
-    "exercises/find-a-coach/src/components/CoachDetails.vue",
     "exercises/find-a-coach/node_modules/vuex/README.md",
     "exercises/find-a-coach/node_modules/vuex/CHANGELOG.md",
     "exercises/find-a-coach/node_modules/vue-router/README.md",

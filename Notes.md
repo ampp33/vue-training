@@ -1,5 +1,5 @@
-6 hours + final project left
-223
+4 hours + final project left
+272
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1704,6 +1704,149 @@ For auth, *we'll have to start with some sort of login data being sent to the ba
 
 ```js
 {
-	r""
+	"rules": {
+		"coaches": {
+			".read": true,
+			".write": "auth != null"
+		},
+		"requests": {
+			".read": "auth != null",
+			".write": true
+		}
+	}
 }
 ```
+
+In Firebase, go to `Authentication` and click `Sign-in method`, and you can select the signin method you want, and it supports a LOT of authenticators!  Nice!!
+
+From there google Firebase API Auth, and find the relevant methods you want, in this case we only care about email and password signup + auth:
+https://firebase.google.com/docs/reference/rest/auth#section-create-email-password
+
+In our case it'd be a good idea to store the auth state and handle the auth process inside Vuex.  In this class we put the `fetch` call inside the Vuex code!
+
+*To get the Firebase API key*, click on the `gear` > `General` > `Web API key`
+
+One you call the API auth endpoint, you'll get a token back + expiry info and various other useful info.  Store the necessary info in Vuex, this is our session with Firebase!
+
+# Optimizing and Deploying Vue Apps
+Files that need to be deployed
+- HTML (just one)
+- CSS (often no separate files)
+- JS (built by Vue)
+
+No code that'll need to run on a server, this site is *static*!  *AWS S3, Firebase, Netlify, Google "Static hosting providers", etc*
+
+## Optimizing Code
+- Test for errors
+- Refactor and keep code DRY
+- Consider Async Vue components
+	- Don't need some components every time the app is loaded (ex: in FAC app, like the login dialog which is only shown ONCE, so we can download less code!  Dialog could be loaded *lazily*, async, and not in advance)
+
+### Async Components / Lazy Loading
+```js
+import { createApp, defineAsyncComponent } from 'vue'
+
+const BaseDialog = defineAsyncComponent(() => { return import('./components/ui/BaseDialog.vue')})
+```
+
+Can use this method inside the router (**but is not recommended, do not do this, according to Vue**), or other child components
+
+## Build Projects for Production
+There are two kinds of projects:
+1. Custom HTML + CSS + JS 
+	1. Just deploy these files! (aka projects that don't use `*.vue` files
+2. Complex project (created with CLI + `*.vue` files)
+	1. Optimize code
+	2. Build (will also optimize your code) - converts `*.vue` files to regular HTML and JS files
+	3. Deploy generated files
+
+```bash
+npm run build
+```
+
+**Deploy** what's in the `/dist` directory, to a static hosting server
+
+## Deploying
+Firebase is a fine host, under the "Hosting" section
+
+For SPA apps, you have to be careful when routing and hosting your app on a server, when a user sends a req to something like `http://mypage.com/products`, it'll look inside the `/products` directory, but that's not what we want for a SPA!  Instead we want it to ignore the path and instead just route to `index.html` in the root!
+- Real web servers do not ignore this by default
+
+# Composition API
+Biggest change from Vue 2 -> 3
+A different way of writing components, tho all the same Vue ideas stay.  JS code you write changes.
+*100% optional, you don't have to use it, and you can even mix it in with the Vue logic we talked about before*
+
+`Options API` - API we've been using thus far
+- Not a second best option, it's totally fine to keep using!
+
+## What Is It?
+- Useful because we *might* face limitations in bigger apps:
+	1. Code that belongs together logically is split up across multiple options (data, methods, computed)
+	2. Reusing logic across components can be tricky or cumbersome
+
+Instead of writing code like before, we instead bundle our logic in a new `setup` method (next to `data`, `methods` and so on, except it'll replace `data`, `methods`, and whatnot)
+	- `v-if` and all the HTML stays the same, just the `script` stuff changes.
+
+![[Pasted image 20230914214437.png]]
+
+## Replacing `data` with `refs`
+Oh hell.
+
+Other `props`, `emits`, `components`, etc (things not listed in the diagram above) *will remain untouched* by the composition API
+
+The only other part that changes is the lifecycle methods
+
+```js
+export default {
+	data() {
+		return {
+			username: 'kevin'
+		}
+	}
+}
+```
+
+translates to:
+
+```js
+import { ref } from 'vue'
+
+export default {
+	setup() {
+		// 'this' doesn't give us access to our normal things, like 'props'
+		// value we can "ref"erence in our template
+		// reactive value that Vue will detect when we change it
+		const username = ref('kevin')
+
+		// how to change the value in a way it'll be reacted to and updated in the DOM
+		// NOTE: just use {{ username }} in the DOM, Vue will automatically drill down to the 'value'
+		setTimeout(() => {
+			username.value = 'blah'
+		}, 1000)
+
+		// return what you want to expose to the DOM/template
+		return {
+			username
+		}
+	}
+}
+```
+
+You can also use this for the setup code, to save yourself some headache:
+
+```vue
+<script setup>
+import { ref } from 'vue'
+
+const username = ref('kevin')
+
+setTimeout(() => {
+	username.value = 'blah'
+}, 1000)
+
+
+</script>
+```
+
+## Building Reactive Objects
