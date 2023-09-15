@@ -1,5 +1,5 @@
-4 hours + final project left
-272
+3 hours
+289
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1850,3 +1850,69 @@ setTimeout(() => {
 ```
 
 ## Building Reactive Objects
+```vue
+<template>
+	<div>{{ user.username }} - {{ user.age }}</div>
+</template>
+
+<script>
+import { ref } from 'vue'
+
+const user = ref({
+	username: 'kevin',
+	age: 35
+})
+
+setTimeout(() => {
+	user.value.username = 'blah'
+	user.value.age = 36
+}, 1000)
+
+return {
+	user
+	// don't return username: user.value.username, since that bypasses the Proxy used behind the scenes
+}
+</script>
+```
+
+Could also use this instead (`reactive()`):
+
+```vue
+<template>
+	<div>{{ user.username }} - {{ user.age }}</div>
+</template>
+
+<script>
+import { reactive } from 'vue'
+
+// reactive only works with objects, and wraps it in a proxy, rather than the funky '.value' thing
+const user = reactive({
+	username: 'kevin',
+	age: 35
+})
+
+setTimeout(() => {
+	// NOTE: we no longer use .value anymore!
+	user.username = 'blah'
+	user.age = 36
+}, 1000)
+
+return {
+	user
+}
+</script>
+```
+
+## Reactivity - A Deep Dive
+*Optional lecture*
+
+Vue has helped methods that can help us understand what's reactive and what's not:
+
+```
+isRef()
+isReactive()
+```
+
+You can also make nested objects inside a reactive object to be reactive as well, using the `toRefs()` function that you can pass an object into and it'll turn all properties into refs!
+
+Nothing too complex here, makes sense.
