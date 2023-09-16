@@ -1,5 +1,5 @@
-3 hours
-289
+2 hours
+294
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
