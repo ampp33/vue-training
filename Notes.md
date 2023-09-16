@@ -1916,3 +1916,17 @@ isReactive()
 You can also make nested objects inside a reactive object to be reactive as well, using the `toRefs()` function that you can pass an object into and it'll turn all properties into refs!
 
 Nothing too complex here, makes sense.
+
+## Methods
+About what you'd expect!
+```js
+export default {
+	setup() {
+		const doStuff = () => console.log('stuff')
+		return {
+			doStuff
+		}
+	}
+}
+```
+
