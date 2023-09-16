@@ -1,0 +1,73 @@
+<template>
+  <div>
+    <h1>Expense Tracker</h1>
+    <div>Available Funds: {{ startingAmount }}</div>
+    <div>Total Expenses: {{ totalExpenses }}</div>
+    <div>Remainging Funds: {{ remainingAmount }}</div>
+    <div>
+      <label for="newPurchase">Amount: </label>
+      <input id="newPurchase" type="number" v-model="newPurchase" />
+    </div>
+    <button @click="addPurchase">Add Expense</button>
+  </div>
+</template>
+
+<script>
+export default {
+  data() {
+    return {
+      startingAmount: 100,
+      newPurchase: 0,
+      purchases: []
+    }
+  },
+  methods: {
+    addPurchase() {
+      this.purchases.push(this.newPurchase)
+      this.newPurchase = 0
+    }
+  },
+  computed: {
+    totalExpenses() {
+      return this.purchases.reduce((acc, curr) => acc + curr, 0)
+    },
+    remainingAmount() {
+      return this.startingAmount - this.totalExpenses
+    }
+  },
+  watch: {
+    remainingAmount(amount) {
+      if(amount < 0) alert('you fucked up, you\'re broke')
+    }
+  }
+}
+</script>
+
+<style scoped>
+header {
+  line-height: 1.5;
+}
+
+.logo {
+  display: block;
+  margin: 0 auto 2rem;
+}
+
+@media (min-width: 1024px) {
+  header {
+    display: flex;
+    place-items: center;
+    padding-right: calc(var(--section-gap) / 2);
+  }
+
+  .logo {
+    margin: 0 2rem 0 0;
+  }
+
+  header .wrapper {
+    display: flex;
+    place-items: flex-start;
+    flex-wrap: wrap;
+  }
+}
+</style>

@@ -1930,3 +1930,47 @@ export default {
 }
 ```
 
+## Computed
+```js
+import { ref, computed } from 'vue'
+export default {
+	setup() {
+		const firstName = ref('')
+		const lastName = ref('')
+		const fullName = computed(() => {
+			return firstName.value + ' ' + lastName.value
+		})
+		// can use fullName.value, but it's read-only (which makes sense)
+		return {
+			firstName, lastName, fullName
+		}
+	}
+}
+```
+
+## Two Way Data Binding
+Can use `v-model` normally, and accepts `ref` and `reactive` values (*don't drill into `.value` ever on these HTML elements*)!  Easy!
+
+## Watch
+Because the `watch` method *lets you watch multiple variables for a single watch* this solution is technically more powerful than the Options API!
+
+```js
+import { ref, computed, watch } from 'vue'
+export default {
+	setup() {
+		const firstName = ref('')
+		const lastName = ref('')
+		const fullName = computed(() => {
+			return firstName.value + ' ' + lastName.value
+		})
+		watch(firstName /* dependency, can be an array of values, and the handler method will accept arrays as well */, (newValue, oldValue) => {
+			// function that gets ran
+			console.log(`new: ${newValue}, old: ${oldValue}`)
+		})
+		// can use fullName.value, but it's read-only (which makes sense)
+		return {
+			firstName, lastName, fullName
+		}
+	}
+}
+```
