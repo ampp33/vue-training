@@ -1,5 +1,5 @@
 3 hours
-289
+296
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1974,3 +1974,48 @@ export default {
 	}
 }
 ```
+
+## Using Template Refs
+No special binding process for refs, just create a variable with the same name as the ref and it'll automatically be bound to the element (but remember to return the ref variable in `setup()` so it's available to the template)
+```vue
+<template>
+	<input ref="firstName" type="text" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+// init to null since we're not bound to the template yet
+const firstName = ref(null)
+</script>
+```
+
+## Using Components
+Same thing as the Options API!
+
+```vue
+<template>
+	<the-header :title="titleText" />
+</template>
+
+<script>
+import TheHeader from './components/UI/TheHeader.vue'
+export default {
+	components: {
+		TheHeader
+	}
+	setup() {
+		const titleText = 'hey'
+		return { titleText }
+	}
+}
+</script>
+```
+
+Components can also use the `setup()` method *or* they can use the Options API!
+
+**You can mix the Composition and Options API, so you can use each whenever it makes sense**
+
+### Using Props
+Get access to props in the `setup()` method which actually accepts two variables: `props` is the first.
+
+Any changes to these `props` in the `setup()` method will be propagated accordingly, nice!
