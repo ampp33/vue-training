@@ -1,5 +1,5 @@
-2 hours
-294
+1 hour
+308
 # Vue
 ## Ways to Use It
 1. Can control parts of the webpage (don't have to use Vue for all parts of the page) (Widgets)
@@ -1974,3 +1974,253 @@ export default {
 	}
 }
 ```
+
+## Using Template Refs
+No special binding process for refs, just create a variable with the same name as the ref and it'll automatically be bound to the element (but remember to return the ref variable in `setup()` so it's available to the template)
+```vue
+<template>
+	<input ref="firstName" type="text" />
+</template>
+
+<script setup>
+import { ref } from 'vue'
+// init to null since we're not bound to the template yet
+const firstName = ref(null)
+</script>
+```
+
+## Using Components
+Same thing as the Options API!
+
+```vue
+<template>
+	<the-header :title="titleText" />
+</template>
+
+<script>
+import TheHeader from './components/UI/TheHeader.vue'
+export default {
+	components: {
+		TheHeader
+	}
+	setup() {
+		const titleText = 'hey'
+		return { titleText }
+	}
+}
+</script>
+
+// or
+
+<script setup>
+import TheHeader from './components/UI/TheHeader.vue'
+const titleText = 'hey'
+</script>
+```
+
+Components can also use the `setup()` method *or* they can use the Options API!
+
+**You can mix the Composition and Options API, so you can use each whenever it makes sense**
+
+### Using Props
+Get access to props in the `setup()` method which actually accepts two variables: `props` and `context`.
+
+Any changes to these `props` in the `setup()` method will be propagated accordingly, nice!
+
+*However*, the `props` object is reactive, but *the properties within it are not*.
+
+### Emitting Custom Events
+Get access to emit in the `setup()` method which actually accepts two variables: `props` and `context`.
+
+`context` contains a few important properties:
+1. `attrs` - fallthru attributes
+2. `emit` - function you can call to emit a custom event
+3. `slots` - slot data
+
+```js
+export default {
+	setup(props, context)
+	context.emit('button-clicked', valueToSendBack)
+}
+```
+
+### Provide/Inject
+Just import some methods and provide decently easy to use parameters
+```js
+import { inject, provide } from 'vue'
+export default {
+	setup() {
+		// key of choice, and value provided
+		provide('name-of-provided-thing', 2)
+		const thingInjected = inject('thing-we-want-to-inject')
+		// NOTE, you should not try to change values within the injected object
+	}
+}
+```
+
+### Lifecycle Hooks
+- beforeCreate, created
+	- No equivalent, because `setup()` runs at the same time as these methods did before, so just putting your code inside `setup()` is equivalent!
+- All other hooks can be imported as methods
+	- `onBeforeMount`
+	- `onMounted`
+	- `onBeforeUpdate`
+	- `onUpdated`
+	- `onBeforeUnmount`
+	- `onUnmounted`
+
+Call the hooks as functions, and pass a function to each of them!
+
+```js
+import { onMounted } from 'vue'
+export default {
+	setup() {
+		onMounted(() => {
+			console.log('mounted')
+		})
+	}
+}
+```
+
+## Routing
+Time to use `hooks`/`composables`, and `composition functions`!  These are special functions written in JS that use the Composition API, that internally usually use Composition API functionality.  In this case the `vue-router` people did a bit of the work for us.
+
+`useRoute` to the rescue, and it contains all the same data as `this.$route` (from what I can tell).
+
+```js
+import { useRoute } from 'vue-router'
+const route = useRoute()
+```
+
+### Redirecting via Router
+`useRouter` to the rescue!
+
+```js
+import { useRouter } from 'vue-router'
+// NOTE: this is different than the note above which user "route" vs. "routeR"
+const router = useRouter()
+router.push('/products')
+```
+
+## Vuex
+The Vuex people got our back for the Composition API, just use `useStore`
+
+```js
+import { useStore } from 'vuex'
+const store = useStore()
+store.dispatch('action')
+// all Vuex features discussed above can now be used here, except you use "store" instead of "this.$store"
+```
+
+# Mixins and Custom Composition
+*Reusing code* in the Options & Composition API - *sharing code across modules* and ways to reuse things, plus *strategies*
+
+`Mixins` - Re-usability tool for Options API
+`Custom` - Composition Functions - Re-usability tool for Composition API
+
+Components have been the main way to have re-usability in Vue, but it doesn't stop there.  But, even with components, sometimes we still have code wanna share but still can't.
+
+*Example*: what if we had two components that had similar logic, like two components that list things with searchability and watchers, but depending on the objects and data they work with this may not really be possible.  With `Mixins` we can share things across components!
+
+## Mixins
+Typically involves *creating a `mixins` directory, at the same level as the `components` directory*, and *create a `*.js` file* there.
+
+Here's what you could see inside one of these files, it looks a lot like the `<script>` section of a component, except that *you cannot share imported components*.
+```js
+export default {
+	components: {
+		TheHeader
+	},
+	data() {
+		return {
+			usename: 'asdf'
+		}
+	},
+	methods: {
+		doStuff() {
+			console.log('yo')
+		}
+	}
+}
+```
+
+Then in your components that you want to use the mixins with, you can add this:
+
+```vue
+<script>
+import TheHeader from './components/TheHeader.vue'
+import someMixin from '../mixins/somefile.js'
+
+export default {
+	// specify all the shared code you want to use!
+	mixins: [ someMixin ],
+	components: {
+		TheHeader
+	}
+}
+</script>
+```
+
+## Mixin Merging
+- Vue auto merges data between the component and mixins
+- If there's an overlap, the component item wins and stays
+- Lifecycle hooks don't get overwritten, both will be executed (with the one from the component being executed last)
+## Global Mixins
+- Effects all components
+- Usually a very limited usecase (logging or analytics that you wanna add to every component)
+
+Here's how you globally add the mixin:
+```js
+import loggingMixin from './mixins/logging.js'
+
+const app = createApp(App)
+// tada!
+app.mixin(loggingMixin)
+```
+
+## Disadvantages
+1. If you build bigger apps then mixins can make it harder to understand your code and component structure (not always obvious where a value is coming from)
+2. Merging may not always do what you want, and while you can override it, that can be messy
+
+*Vue's solution to this madness is Composition API*, since with that you can use `Custom Composition`
+
+## Custom Hooks / Composables & The Composition API
+With the Composition API you're just writing plain JS code, so if we want to share logic/code we can just define that code in another `.js` file and import it into our components.  Simple enough.
+
+The code we re-use here will be meant to work inside the `setup()` method / `<script setup>`
+
+1. Create a `hooks` (or `composables`) directory next to the `components` directory
+2. Create a `.js` file
+3. Inside the file, define functions that start with `use*` (ex: `useAlert()`)
+	1. Move all the code you want to share into that function, and *be sure to return an object containing all the objects / methods / whatnot*
+4. Import this new `.js` file into the component you want to use the shared logic
+5. Call the `use*` method(s) you defined, and you can use what it returns and use the data / methods accordingly
+
+NOTE: *It could also be useful to pass parameters to your `use*` function* if it'll make your code more dynamic and reusable, it's your code, so you can customize it as much as needed.  This is very powerful and not something you can do with mixins (albeit you could probably make this work with mixins if you really wanted)
+
+## Why Hooks Beat Mixins
+1. It's easy to make them more configurable
+2. Easier to see what comes from each hook, since they're explicitly pulled out
+
+# Next Steps
+1. Practice, practice, practice
+2. Revisit past lectures and modules, and refresh knowledge, and re-do course projects
+3. Explore official docs
+4. Build stuff, dive into challenging problems
+
+# Vue3
+What's changed from Vue2 to Vue3?
+1. create app via `createApp`
+2. `data` must always be a method
+3. Components, directives, and third party modules are registered on `app` instead of the Vue global object
+4. Transitions: `v-enter` is now `v-enter-from`
+5. Router now created with `createRouter()`, transitions also work differently
+6. Vuex store now created via `createStore()`
+
+New Features:
+1. Composition API
+2. Teleport
+3. Fragments
+4. Emits Component Option
+5. `createRenderer`
+6. Internally re-written in TS
