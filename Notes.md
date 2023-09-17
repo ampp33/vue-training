@@ -1253,11 +1253,57 @@ You can even replace the entire CSS class name, if need-be:
 Each of these action event methods receive the `element` object, of the element being modified, and a `done` function that you can call to tell Vue that you're done (useful for async work/styling)
 
 ## Using JS for Transitions instead of CSS
-Supported by `transition` component, and useful if you wanna use a 3rd party animation JS lib (useful page scrolling based animations or more complex work like that)
+Supported by `transition` component, and useful if you wanna use a 3rd party animation JS lib (useful page scrolling based animations or more complex work like that).  You can use the **Transition Events** mentioned above to call custom JS to modify CSS and whatnot to perform your transition logic.
 
 ## Disabling CSS Transitions
+If you control the whole animation via JS, then you can disable CSS transitions by  adding the following attribute to your `<transition>` element: `:css="false"`, which will tell Vue that no CSS will be used for transitions.  This isn't necessary, but it'll tell Vue to not look for our CSS classes or try to figure out durations, which *improves performance*.
 
-**Come back and finish this section at the end**
+## Animated Lists
+Use the `<transition-group>` element, which lets us interact/animate with multiple elements.
+
+`<transition>` doesn't actually result in a transition element being added to the DOM, but that's not the case for `<transition-group>`, and we can tell Vue what element to render for the `<transition-group>` element via the `tag="***"` attribute (ex: `tag="ul"`, or *you can specify a custom component*)
+
+```vue
+<template>
+	<transition-group tag="ul" name="user-list">
+		<li v-for="user in users" :key="user">{{ user }}</li>
+	</transition-group>
+</template>
+
+<style>
+.user-list-enter-from {
+	opacity: 0;
+	transform: translateX(-30px)
+}
+
+.user-list-enter-active {
+	transition: all 1s ease-out
+}
+
+.user-list-enter-to,
+.user-list-leave-from{
+	opacity: 1;
+	transform: translateX(0)
+}
+
+.user-list-leave-active {
+	transition: all 1s ease-in;
+	position: absolute; /* necessary for non-changing list items, so that there's no animation stutter */
+}
+
+.user-list-leave-to {
+	opacity: 0;
+	transform: translateX(30px)
+}
+
+/* new class for transition-group to let us control animation of other elements that are not being animated, but will be affected */
+/* added to all elements that are not entering or leaving */
+/* Vue also auto moves them to their new place by using 'transform' under the hood */
+.user-list-move {
+	transition: transform 0.8s ease
+}
+</style>
+```
 
 ## Transitioning Between Routes
 Have to use this funky mechanism to identify components to transition between with the router.
